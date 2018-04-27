@@ -6,29 +6,36 @@ def main():
     
     calculate_sales(week_sales)
 
-
-    
 def calculate_sales(sales_list):
+    total_sales = 0
+    avg_sales = 0
+    size = len(sales_list[0])
     for c in range(COLS):
         print("Please enter sales for ", sales_list[0][c], ": ", sep='', end='') 
-        sale_price = float(input())
-        if isValid(sale_price):
-            sales_list[1][c] = sale_price
-        else:
-            sale_price = ask_sale_again()
+        sale_price = input()
+
+        while not isValid(sale_price):
+            print("Invalid sales value.")
+            print("Please enter sales for ", sales_list[0][c], ": ", sep='', end='')
+            sale_price = input()
+        sales_list[1][c] = float(sale_price)
+        total_sales += sales_list[1][c]
+    avg_sales = total_sales / size
+    print("Total sales: ", "$", format(total_sales, ".2f"), sep='')
+    print("Average sales: ", "$", format(avg_sales, ".2f"), sep='')
+
 def isValid(num):
-        try:
-            if num < 0:
-                print("Invalid sales value.\n")
-                return False
-        except ValueError:
-            print("Invalid sales value. Not a number\n")
-            return False
+        valid = True
+        if not num.isdigit():
+            valid = False
+            return valid
+        
+        new_num = int(num)
+
+        if new_num < 0:
+            valid = False 
+            return valid
         else:
-            return True
-
-def ask_sale_again():
-    sale_price = float(input("Invalid sales value.\n"))
-    return sale_price
-
+            valid = True
+            return valid
 main()
