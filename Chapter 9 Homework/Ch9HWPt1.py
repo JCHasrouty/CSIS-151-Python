@@ -13,7 +13,7 @@ DISP_EMP = 6
 QUIT = 7
 
 def main():
-    ## initialize empty dictionary
+    # initialize empty dictionary
     employees = {}
     user_input = 0
 
@@ -39,8 +39,8 @@ def main():
         elif user_input == DISP_EMP:
             dispEmployees(employees)
             
-        ## for debugging purposes
-        ## print(employees)
+        # for debugging purposes
+        # print(employees)
 
 def get_menu_choice():
     print("Employee Database")
@@ -63,14 +63,15 @@ def get_menu_choice():
     
 def addEmployee(dictionary):
     new_emp = input("Please enter the employees name or type quit to cancel: ")
-    emp_info = input("Please enter the employees ID, Department, Title, and Salary: ")
-## While adding an employee you should allow the user to either cancel the operation
-## or re-enter the name again.
-    if new_emp.upper() != "QUIT":
+    # While adding an employee you should allow the user to either cancel the operation
+    # or re-enter the name again.
+    while new_emp.upper() != "QUIT":
         if new_emp not in dictionary:
+            emp_info = input("Please enter the employees ID, Department, Title, and Salary: ")
             dictionary[new_emp] = emp_info
         else:
             print("Employee employee already exists.")
+        new_emp = input("Please enter another employee name or type quit to cancel: ")
     print()
         
 def findEmpByName(dictionary):
@@ -82,12 +83,14 @@ def findEmpByName(dictionary):
     print()
           
 def findEmpByEID(dictionary):
-    print("This function is functional but not yet implemented... stay tuned.") 
+    print("This function is functional but not yet implemented... stay tuned.")
+    
 def deleteEmployee(dictionary):
-    emp_name = input("Enter an employee name: ")
-
-    if emp_name in dictionary:
-        del dictionary[emp_name]
+    # made this function case insensitive as well
+    emp_name = input("Enter an employee name to remove: ")
+    emp_insensitive = emp_name.lower().capitalize()
+    if emp_insensitive in dictionary:
+        del dictionary[emp_insensitive]
     else:
         print("That employee was not found.")
     print()
