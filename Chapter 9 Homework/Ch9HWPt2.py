@@ -3,6 +3,7 @@
 ## value is a dictionary also but will contain EID, dept, salary etc
 
 # Global constants for menu choices
+import pickle
 
 ADD_EMP = 1
 FIND_BN = 2
@@ -14,9 +15,8 @@ QUIT = 7
 
 def main():
     # initialize empty dictionary
-    employees = {}
     user_input = 0
-
+    employees = load('employee.dat')
     while user_input != QUIT:
         # display menu
         user_input = get_menu_choice()
@@ -41,7 +41,8 @@ def main():
             
         # for debugging purposes
         # print(employees)
-
+    save(employees, 'employee.dat')
+    
 def get_menu_choice():
     print("Employee Database")
     print("-----------------")
@@ -60,6 +61,25 @@ def get_menu_choice():
         user_input = int(input("Please enter a valid choice: "))
 
     return user_input
+
+def load(filename):
+    try:
+        file = open(filename, 'rb')
+        #unpickle the file and return that dictionary
+        unpickled_dictionary = pickle.load(file)
+        file.close()
+        print("File was read returning loaded dictionary")
+        return unpickled_dictionary
+    except FileNotFoundError:
+        empty_dictionary = {}
+        print("Returning empty dictionary")
+        return empty_dictionary
+
+def save(dictionary, filename):
+    output_file = open(filename, 'wb')
+    pickle.dump(dictionary, output_file)
+    output_file.close()
+    print("Data has been written to file.")
     
 def addEmployee(dictionary):
     new_emp = input("Please enter the employees name or type quit to cancel: ")
@@ -78,12 +98,18 @@ def findEmpByName(dictionary):
     # lowercase entire word then capitalize first letter and search
     emp_to_find = input("Please enter the name of the employee you'd like to find: ")
     emp_insensitive = emp_to_find.lower().capitalize()
+    #print(emp_insensitive)
     print("Employee:", emp_insensitive, dictionary.get(emp_insensitive, "Not found."))
     print()
           
 def findEmpByEID(dictionary):
-    print("This function is functional but not yet implemented... stay tuned.")
-    
+    # function is broken
+    emp_eid = input("Please enter the EID of the employee you'd like to find: ")
+    for key, value in dictionary.items():
+        if value == emp_eid:
+            print("Employee:", key,value)
+        else:
+            print("Employeee was not found.")
 def deleteEmployee(dictionary):
     # made this function case insensitive as well
     emp_name = input("Enter an employee name to remove: ")
