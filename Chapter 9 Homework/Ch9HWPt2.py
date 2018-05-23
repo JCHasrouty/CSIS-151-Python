@@ -103,13 +103,15 @@ def findEmpByName(dictionary):
     print()
           
 def findEmpByEID(dictionary):
-    # function is broken
     emp_eid = input("Please enter the EID of the employee you'd like to find: ")
-    for key, value in dictionary.items():
-        if value == emp_eid:
+    for (key,value) in dictionary.items():
+        if emp_eid in value:
             print("Employee:", key,value)
-        else:
-            print("Employeee was not found.")
+            print()
+            return
+    print("Employeee was not found.")
+    print()
+            
 def deleteEmployee(dictionary):
     # made this function case insensitive as well
     emp_name = input("Enter an employee name to remove: ")
@@ -121,8 +123,23 @@ def deleteEmployee(dictionary):
     print()
         
 def dispStats(dictionary):
-    print("This function is functional but not yet implemented... stay tuned.")
-    
+    temp_dict = {}
+    # scan all employeees one by one
+    # for each employee get department name
+    # check the temporary dictionary, if dept is there then update by adding one to value
+    # if not there create a new entry where key = dept and value = 1
+    # print temp dictionary
+    for key,value in dictionary.items():
+        temp_val = value.rsplit(',')[1]
+        if temp_val in temp_dict:
+            temp_dict[temp_val] += 1
+        else:
+            temp_dict[temp_val] = 1
+            
+    # print the stats for the temp dictionary
+    for key in temp_dict:
+        print(key, temp_dict[key])
+    print()
 def dispEmployees(dictionary):
     for key in dictionary:
         print(key, dictionary[key])
