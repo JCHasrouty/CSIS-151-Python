@@ -1,8 +1,4 @@
-## chapter 9 homework 
-## make a dictionary with the key being the employeee name and the value a list
-## value is a dictionary also but will contain EID, dept, salary etc
-
-# Global constants for menu choices
+import Employee
 import pickle
 
 ADD_EMP = 1
@@ -14,9 +10,8 @@ DISP_EMP = 6
 QUIT = 7
 
 def main():
-    # initialize empty dictionary
-    user_input = 0
     employees = load('employee.dat')
+    user_input = 0
     while user_input != QUIT:
         # display menu
         user_input = get_menu_choice()
@@ -39,8 +34,6 @@ def main():
         elif user_input == DISP_EMP:
             dispEmployees(employees)
             
-        # for debugging purposes
-        # print(employees)
     save(employees, 'employee.dat')
     
 def get_menu_choice():
@@ -80,20 +73,23 @@ def save(dictionary, filename):
     pickle.dump(dictionary, output_file)
     output_file.close()
     print("Data has been written to file.")
-    
+
 def addEmployee(dictionary):
     new_emp = input("Please enter the employees name or type quit to cancel: ")
-    # While adding an employee you should allow the user to either cancel the operation
-    # or re-enter the name again.
     while new_emp.upper() != "QUIT":
         if new_emp not in dictionary:
-            emp_info = input("Please enter the employees ID, Department, Title, and Salary: ")
+            emp_id = input("Please enter the employees ID: ")
+            emp_dept = input("Please enter the employees department: ")
+            emp_job = input("Please enter the employees job title: " )
+            emp_salary = input("Please enter the employees salary: ")
+            emp_info = Employee.Employee(emp_id, emp_dept, emp_job, emp_salary)
             dictionary[new_emp] = emp_info
+            print(new_emp, "has been successfully added")
         else:
-            print("Employee employee already exists.")
+            print("Employee", new_emp,"already exists.")
         new_emp = input("Please enter another employee name or type quit to cancel: ")
     print()
-        
+
 def findEmpByName(dictionary):
     # lowercase entire word then capitalize first letter and search
     emp_to_find = input("Please enter the name of the employee you'd like to find: ")
@@ -101,27 +97,27 @@ def findEmpByName(dictionary):
     #print(emp_insensitive)
     print("Employee:", emp_insensitive, dictionary.get(emp_insensitive, "Not found."))
     print()
-          
+
 def findEmpByEID(dictionary):
     emp_eid = input("Please enter the EID of the employee you'd like to find: ")
     for (key,value) in dictionary.items():
-        if emp_eid in value:
+        if value.get_emp_ID() == emp_eid:
             print("Employee:", key,value)
             print()
             return
     print("Employeee was not found.")
     print()
-            
-def deleteEmployee(dictionary):
-    # made this function case insensitive as well
-    emp_name = input("Enter an employee name to remove: ")
-    emp_insensitive = emp_name.lower().capitalize()
-    if emp_insensitive in dictionary:
-        del dictionary[emp_insensitive]
-    else:
-        print("That employee was not found.")
-    print()
-        
+
+##def deleteEmployee(dictionary):
+##    # made this function case insensitive as well
+##    emp_name = input("Enter an employee name to remove: ")
+##    emp_insensitive = emp_name.lower().capitalize()
+##    if emp_insensitive in dictionary:
+##        del dictionary[emp_insensitive]
+##    else:
+##        print("That employee was not found.")
+##    print()
+##        
 def dispStats(dictionary):
     temp_dict = {}
     # scan all employeees one by one
@@ -129,12 +125,22 @@ def dispStats(dictionary):
     # check the temporary dictionary, if dept is there then update by adding one to value
     # if not there create a new entry where key = dept and value = 1
     # print temp dictionary
+    max_salary = "Max Salary"
+    min_salary = "Min Salary"
+    temp_dict[max_salary] = ""
+    temp_dict[min_salary] = ""
     for key,value in dictionary.items():
-        temp_val = value.rsplit(',')[1]
+        temp_val = value.get_department()
+        temp_salary = value.get_salary()
         if temp_val in temp_dict:
             temp_dict[temp_val] += 1
         else:
             temp_dict[temp_val] = 1
+        if temp_salary > temp_dict[max_salary]:
+            temp_dict[max_salary] = temp_salary
+        if temp_salary < temp_dict[min_salary]:
+            temp_dict[min_salary] = temp_salary
+        
             
     # print the stats for the temp dictionary
     for key in temp_dict:
@@ -147,3 +153,4 @@ def dispEmployees(dictionary):
     print()
     
 main()
+
