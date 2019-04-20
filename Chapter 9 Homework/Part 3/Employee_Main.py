@@ -108,43 +108,72 @@ def findEmpByEID(dictionary):
     print("Employeee was not found.")
     print()
 
-##def deleteEmployee(dictionary):
-##    # made this function case insensitive as well
-##    emp_name = input("Enter an employee name to remove: ")
-##    emp_insensitive = emp_name.lower().capitalize()
-##    if emp_insensitive in dictionary:
-##        del dictionary[emp_insensitive]
-##    else:
-##        print("That employee was not found.")
-##    print()
-##        
+def deleteEmployee(dictionary):
+    # made this function case insensitive as well
+    emp_name = input("Enter an employee name to remove: ")
+    emp_insensitive = emp_name.lower().capitalize()
+    if emp_insensitive in dictionary:
+        del dictionary[emp_insensitive]
+    else:
+        print("That employee was not found.")
+    print()
+        
 def dispStats(dictionary):
-    temp_dict = {}
-    # scan all employeees one by one
-    # for each employee get department name
-    # check the temporary dictionary, if dept is there then update by adding one to value
-    # if not there create a new entry where key = dept and value = 1
-    # print temp dictionary
+    dept_dict = {}
     max_salary = "Max Salary"
     min_salary = "Min Salary"
-    temp_dict[max_salary] = ""
-    temp_dict[min_salary] = ""
-    for key,value in dictionary.items():
+    avg = "Average Salary"
+    sal_count = "Salary Count"
+    total_sal = "Total Salary"
+
+    temp_dict = {} #salaries
+    salary_avg = 0
+    salary_counter = 0       
+
+    #This initializes all the departments
+    for key, value in dictionary.items():
         temp_val = value.get_department()
-        temp_salary = value.get_salary()
-        if temp_val in temp_dict:
-            temp_dict[temp_val] += 1
+        dept_dict[temp_val] = {}
+
+    #This puts values of salaries in all the depts
+    for key, value in dictionary.items():
+        temp_val = value.get_department()
+
+        #this is our base case, when the dept does not have any previous salary
+        if 'Max Salary' not in dept_dict[temp_val]:
+            dept_dict[temp_val][max_salary] = -99999999999
+            dept_dict[temp_val][min_salary] = 99999999999
+            dept_dict[temp_val][sal_count] = 1
+            dept_dict[temp_val][avg]= 0
+            dept_dict[temp_val][total_sal]= 0
+    
         else:
-            temp_dict[temp_val] = 1
-        if temp_salary > temp_dict[max_salary]:
-            temp_dict[max_salary] = temp_salary
-        if temp_salary < temp_dict[min_salary]:
-            temp_dict[min_salary] = temp_salary
+            dept_dict[temp_val][sal_count] += 1
+    
+        temp_salary = int(value.get_salary().replace(',',''))
+        salary_avg += temp_salary
+        salary_counter += 1
+
+        max_sal = dept_dict[temp_val][max_salary]
+        min_sal = dept_dict[temp_val][min_salary]
+        if temp_salary > max_sal:
+            dept_dict[temp_val][max_salary] = temp_salary
+
+        if temp_salary < min_sal:
+            dept_dict[temp_val][min_salary] = temp_salary
+
+        dept_dict[temp_val][total_sal] += temp_salary
+        dept_dict[temp_val][avg]= dept_dict[temp_val][total_sal]/ dept_dict[temp_val][sal_count]        
         
-            
     # print the stats for the temp dictionary
-    for key in temp_dict:
-        print(key, temp_dict[key])
+    print()
+    for key in dept_dict:
+        print(key)
+        for key2 in dept_dict[key]:
+            #Don't print the Salary Count and Total Salary
+            if key2 is not "Salary Count" and key2 != "Total Salary":
+                print(key2,"{:,}".format(dept_dict[key][key2]))
+        print()
     print()
     
 def dispEmployees(dictionary):
